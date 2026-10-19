@@ -59,7 +59,7 @@ test('home promotions, category views, search and persistent cart work', async (
 test('home fits the viewport and account explains the v1 boundary', async ({ page }, testInfo) => {
   await page.goto('/');
   await expect(page.getByRole('heading', { name: 'Special Deals', exact: true })).toBeVisible();
-  await expect(page.getByRole('link', { name: 'Call Ozwashroom on 1300 652 725' })).toBeVisible();
+  await expect(page.getByRole('link', { name: 'Call Ozwashroom on 1300 652 715' })).toBeVisible();
   const banner = await page.getByTestId('home-promo-banner').boundingBox();
   expect(banner?.height).toBeLessThanOrEqual(170);
   const logo = page.getByRole('img', { name: 'Ozwashroom logo', exact: true }).first();
