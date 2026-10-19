@@ -79,17 +79,17 @@ export function Header() {
             onPress={() => router.navigate('/')}
             style={styles.brand}
           >
-            {brand.logoUrl && !logoFailed ? (
-              <Image
-                source={{ uri: brand.logoUrl }}
-                accessibilityLabel="Ozwashroom logo"
-                resizeMode="contain"
-                style={styles.brandImage}
-                onError={() => setLogoFailed(true)}
-              />
-            ) : (
-              <Copy style={styles.brandText}>OZWASHROOM</Copy>
-            )}
+            <Image
+              source={
+                brand.logoUrl && !logoFailed
+                  ? { uri: brand.logoUrl }
+                  : require('../../assets/ozwashroom-logo.png')
+              }
+              accessibilityLabel="Ozwashroom logo"
+              resizeMode="contain"
+              style={styles.brandImage}
+              onError={() => setLogoFailed(true)}
+            />
           </Pressable>
           <Pressable
             accessibilityRole="link"
@@ -189,7 +189,7 @@ export function SourceNotice() {
       />
       <Copy style={styles.noticeText}>
         {catalog.source === 'sample'
-          ? 'Sample catalogue · Illustrative products & AUD prices'
+          ? 'Sample catalogue · Official photos, illustrative AUD prices'
           : 'Shopify catalogue · Prices in AUD'}
         {catalog.truncated ? ' · Showing the first 1,000 products per collection' : ''}
       </Copy>
@@ -278,13 +278,6 @@ export const styles = StyleSheet.create({
   brandColumn: { flexShrink: 1, paddingTop: 12, paddingBottom: 4 },
   brand: { alignSelf: 'flex-start', justifyContent: 'center', minHeight: 35 },
   brandImage: { width: 185, height: 35 },
-  brandText: {
-    fontFamily: f.bold,
-    letterSpacing: 0.3,
-    fontSize: 21,
-    lineHeight: 30,
-    color: c.primary,
-  },
   contactLink: {
     flexDirection: 'row',
     alignItems: 'center',

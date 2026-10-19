@@ -11,12 +11,13 @@ import {
 } from '../catalog/types';
 import { colors as c, fonts as f } from '../theme';
 import { Copy, Icon } from './ui';
+import { bundledProductPhotos } from './productPhotos';
 
 export function ProductImage({ product, size = 150 }: { product: Product; size?: number }) {
   const [failed, setFailed] = useState(false);
   return product.imageUrl && !failed ? (
     <Image
-      source={{ uri: product.imageUrl }}
+      source={bundledProductPhotos[product.imageUrl] || { uri: product.imageUrl }}
       accessibilityLabel={product.imageAlt || product.title}
       style={{ width: size, height: size }}
       resizeMode="contain"
@@ -59,7 +60,10 @@ export function ProductCard({
             <Copy style={s.newText}>NEW</Copy>
           </View>
         ) : null}
-        <ProductImage product={product} size={155} />
+        <ProductImage
+          product={product}
+          size={typeof width === 'number' ? Math.min(155, width - 24) : 155}
+        />
         <View style={s.corner}>
           <Icon name="arrow-forward" size={16} />
         </View>
@@ -183,7 +187,7 @@ const s = StyleSheet.create({
     backgroundColor: c.accent,
     borderRadius: 4,
   },
-  saleText: { fontSize: 9, fontFamily: f.bold, color: '#005DA8', letterSpacing: 0.3 },
+  saleText: { fontSize: 9, fontFamily: f.bold, color: c.primary, letterSpacing: 0.3 },
   newBadge: {
     position: 'absolute',
     left: 12,

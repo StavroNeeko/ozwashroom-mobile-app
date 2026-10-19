@@ -1,5 +1,6 @@
 import React from 'react';
 import {
+  Image,
   Pressable,
   RefreshControl,
   ScrollView,
@@ -165,11 +166,16 @@ export default function Home() {
           )}
         </CatalogBoundary>
         <View style={s.footer}>
-          <Copy style={{ fontFamily: f.bold, fontSize: 19, color: c.primary }}>Ozwashroom</Copy>
+          <Image
+            source={require('../../assets/ozwashroom-logo.png')}
+            accessibilityLabel="Ozwashroom logo"
+            resizeMode="contain"
+            style={{ width: 185, height: 36 }}
+          />
           <Copy style={{ color: c.muted, fontSize: 11 }}>Better spaces. Every day.</Copy>
           <Copy style={s.footerNote}>
             {catalog?.source === 'sample'
-              ? 'Demo catalogue. Products, offers and prices are illustrative.\nNo orders or payments are processed.'
+              ? 'Demo catalogue. Official product photos; illustrative offers and prices.\nNo orders or payments are processed.'
               : 'Browse the catalogue. Checkout is not available in this version.'}
           </Copy>
         </View>
@@ -194,7 +200,7 @@ const s = StyleSheet.create({
   },
   searchFilter: { borderLeftWidth: 1, borderLeftColor: c.line, paddingLeft: 13 },
   hero: {
-    backgroundColor: c.primary,
+    backgroundColor: c.websiteBlue,
     borderRadius: 12,
     overflow: 'hidden',
     position: 'relative',

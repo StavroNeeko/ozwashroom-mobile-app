@@ -1,7 +1,9 @@
 export const colors = {
   ink: '#142D4D',
   muted: '#65758A',
-  primary: '#0067B1',
+  // Verified website button color and announcement/category accent; see assets/sources.json.
+  primary: '#4146B0',
+  websiteBlue: '#3773ED',
   accent: '#E3F0FC',
   canvas: '#F5F8FC',
   white: '#FFFFFF',

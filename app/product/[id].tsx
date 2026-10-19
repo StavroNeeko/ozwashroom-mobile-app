@@ -38,7 +38,7 @@ export default function ProductDetail() {
         {product ? (
           <View style={[s.layout, width > 750 && { flexDirection: 'row' }]}>
             <View style={s.image}>
-              <ProductImage product={product} size={280} />
+              <ProductImage product={product} size={Math.min(280, width - 84)} />
             </View>
             <View style={s.content}>
               <Copy style={s.eyebrow}>

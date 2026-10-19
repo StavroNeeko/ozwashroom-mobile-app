@@ -12,7 +12,7 @@ cp .env.example .env
 npm start
 ```
 
-With no Shopify domain or token, the app uses **clearly labelled sample data**. Sample names, availability, prices and discounts are fictitious and do not represent live Ozwashroom offers. Sample mode requires no credentials or external image services. Fonts are bundled locally. Sample products use neutral photo placeholders; live Shopify products use their own catalogue images.
+With no Shopify domain or token, the app uses **clearly labelled sample data**. Product names and photos are sourced from the official website; sample availability, arrival dates, prices and discounts are fictitious and do not represent live Ozwashroom offers. Sample mode requires no credentials or external image services. Fonts are bundled locally. Ten official product photos and the company logo are bundled for offline previews; live Shopify products use their own catalogue images.
 
 - **Android:** scan the QR code with Expo Go, or run `npm run android` with an Android emulator installed and running.
 - **iPhone:** scan the QR code with Camera and open compatible Expo Go. `npm run ios` opens an iOS Simulator on **macOS with Xcode**. Linux cannot run the iOS Simulator.
@@ -93,14 +93,18 @@ src/catalog/          Shared types, sample catalogue, config and Shopify adapter
 src/components/       UI primitives, product cards and category icons
 src/state/            Catalogue loading and persisted local cart
 src/theme.ts          Colours and typography
-assets/               Original app icon and favicon
+assets/               Official logo, product photos, website icons and source manifest
 tests/                Node unit tests and Playwright browser tests
 ```
 
-`CatalogService.load()` is the data boundary. `StoreProvider` chooses the service from public configuration. Screens consume normalized products, keeping Shopify fields outside the UI. DM Sans is distributed through `@expo-google-fonts/dm-sans` under its included font license. Icons use Ionicons through Expo. The original prototype wordmark and invented product illustrations have been removed. The header currently displays the company name as plain text until the official logo is provided; the launcher icon remains a prototype asset.
+`CatalogService.load()` is the data boundary. `StoreProvider` chooses the service from public configuration. Screens consume normalized products, keeping Shopify fields outside the UI. DM Sans is distributed through `@expo-google-fonts/dm-sans` under its included font license. Icons use Ionicons through Expo. Official brand and product assets are recorded in `assets/sources.json`, including exact source URLs, product names and retrieval date.
 
 ## Brand assets and contact
 
-The visual theme now uses blue, navy and white. The promotional banner is approximately half its previous height: 165 points on phones and 160 on larger screens, with content allowed to expand for larger accessibility text sizes. The precise website blue still needs verification against the official logo or website styles.
+Brand assets were retrieved from [ozwashroom.com.au](https://www.ozwashroom.com.au) on **19 October 2026**. The bundled header/footer PNG is the official `ozwashroom-australia-logo.png`. The website's primary button color **#4146B0** is used for buttons, active tabs and contact links; the verified announcement/category accent **#3773ED** is used for the compact promotional banner. Sources and CSS selectors are recorded in `assets/sources.json`.
 
-The owner-confirmed phone **1300 652 725** appears under the header and opens `tel:1300652725`. Optional public overrides are documented in `.env.example`: `EXPO_PUBLIC_BRAND_LOGO_URL` (PNG/JPEG), `EXPO_PUBLIC_CONTACT_PHONE` and `EXPO_PUBLIC_CONTACT_URL`. Restart Metro after changing them. The official logo and product photography were unavailable to the implementation environment, so the app uses plain company-name text and neutral photo placeholders. No replacement photographs or logos have been invented. Product photos will appear from configured Shopify data; an official logo can be supplied using the branding setting or bundled once the asset is available. The sample names and pricing remain explicitly illustrative.
+The banner remains approximately half its original height: 165 points on phones and 160 on larger screens, with room to expand for accessibility text sizes. Product images use contain sizing so tall dispensers and wide grab rails are visible without cropping. Ten official product names and corresponding photos cover all six sample categories. Photos are bundled and require no image host access in sample mode; missing or failed live images retain the neutral fallback. Sample prices, discounts, availability and arrival dates remain illustrative, with visible notices on browsing, product and cart screens. These are preview fixtures, not a snapshot of current store offers.
+
+The owner-confirmed phone **1300 652 725** remains under the header and opens `tel:1300652725`. The website currently lists **1300 652 715**; the redesign preserves the owner's previous selection. Optional public overrides are documented in `.env.example`: `EXPO_PUBLIC_BRAND_LOGO_URL` (PNG/JPEG), `EXPO_PUBLIC_CONTACT_PHONE` and `EXPO_PUBLIC_CONTACT_URL`. Restart Metro after changing them. If a remote logo fails, the bundled official logo appears.
+
+The website's official favicon replaces the invented prototype icon. Its source is only **32×32 pixels**, even when a larger size is requested from Shopify; a high-resolution square brand asset is still needed for final app-store launcher artwork. Header and product assets are used at their original aspect ratios. Images remain the property of their respective owners.
