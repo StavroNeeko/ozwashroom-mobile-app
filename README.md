@@ -37,6 +37,14 @@ Web uses a client-rendered single-page shell with eager Expo Router routes. This
 
 ## Connect Shopify Storefront
 
+For Ozwashroom, `shopify.env.example` provides the verified store domain and collection mappings. Copy it to your local `.env`, enter your **public Storefront API token**, then restart Expo with `npx expo start --clear`. Do not start with the token blank: a partially configured live connection shows a configuration error instead of demo prices.
+
+In Shopify admin, add/open the **Headless** sales channel, choose **Create storefront** (for example, “Ozwashroom mobile”), then use **Manage API access → Storefront API → Manage** to find the **public access token**. Enable product/collection read access and publish the products and collections you want to that storefront. See [Shopify's public-token setup](https://shopify.dev/docs/api/storefront-web-components/getting-started). Private tokens and Admin API tokens do not belong in this mobile app.
+
+The website identifies the store as `ozwashroom.myshopify.com`. Public collections were checked on 19 October 2026: baby change stations use `baby-change-table`, grab rails use `grab-rail`, and the populated Flash Sale collection uses `flash-sale-1` (`flash-sale` is empty). The live template includes these mappings. Public website visibility does not establish Headless-channel availability; verify that publication separately. You can change the deals collection handle in `.env` to choose a different collection for Special Deals.
+
+Once connected, Shopify controls product names, images, selling/compare-at prices and availability. Home pull-to-refresh or reopening the app reloads the catalogue; API configuration and collection mapping changes require an Expo restart/rebuild. Checkout remains unavailable in this version.
+
 1. Configure a **public Storefront API token** with read access to products and collections (for example, using the Headless channel). Publish the desired products and collections to that storefront. Do not use an Admin API token or a private Storefront token.
 2. Copy `.env.example` to `.env` and set both domain and public token:
 
