@@ -1,10 +1,20 @@
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { router } from 'expo-router';
-import React from 'react';
-import { ActivityIndicator, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import React, { useState } from 'react';
+import {
+  ActivityIndicator,
+  Image,
+  Linking,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { colors as c, fonts as f } from '../theme';
 import { useStore } from '../state/Store';
+import { brand } from '../brand';
 
 export function Copy({ children, style, ...props }: React.ComponentProps<typeof Text>) {
   return (
@@ -49,33 +59,63 @@ export function Action({
         { opacity: disabled ? 0.45 : pressed ? 0.75 : 1 },
       ]}
     >
-      <Copy style={[styles.actionLabel, secondary && { color: c.green }]}>{label}</Copy>
-      {icon && <Icon name={icon} size={17} color={secondary ? c.green : c.white} />}
+      <Copy style={[styles.actionLabel, secondary && { color: c.primary }]}>{label}</Copy>
+      {icon && <Icon name={icon} size={17} color={secondary ? c.primary : c.white} />}
     </Pressable>
   );
 }
 export function Header() {
   const { count } = useStore();
   const insets = useSafeAreaInsets();
+  const [logoFailed, setLogoFailed] = useState(false);
+  const [contactError, setContactError] = useState(false);
   return (
     <View style={{ backgroundColor: c.white, paddingTop: insets.top }}>
       <View style={styles.header}>
-        <Pressable
-          accessibilityRole="link"
-          accessibilityLabel="Ozwashroom home"
-          onPress={() => router.navigate('/')}
-          style={styles.brand}
-        >
-          <View style={styles.brandMark}>
-            <View style={styles.brandDot} />
-          </View>
-          <View>
-            <Copy style={styles.brandText}>
-              ozwashroom<Copy style={{ color: '#89A47B', fontSize: 23 }}>.</Copy>
-            </Copy>
-            <Copy style={styles.brandSub}>BETTER SPACES. EVERY DAY.</Copy>
-          </View>
-        </Pressable>
+        <View style={styles.brandColumn}>
+          <Pressable
+            accessibilityRole="link"
+            accessibilityLabel="Ozwashroom home"
+            onPress={() => router.navigate('/')}
+            style={styles.brand}
+          >
+            {brand.logoUrl && !logoFailed ? (
+              <Image
+                source={{ uri: brand.logoUrl }}
+                accessibilityLabel="Ozwashroom logo"
+                resizeMode="contain"
+                style={styles.brandImage}
+                onError={() => setLogoFailed(true)}
+              />
+            ) : (
+              <Copy style={styles.brandText}>OZWASHROOM</Copy>
+            )}
+          </Pressable>
+          <Pressable
+            accessibilityRole="link"
+            accessibilityLabel={
+              brand.contactPhone
+                ? `Call Ozwashroom on ${brand.contactPhone}`
+                : 'Contact us on the Ozwashroom website'
+            }
+            onPress={() => {
+              setContactError(false);
+              const phone = brand.contactPhone?.replace(/[^+\d]/g, '');
+              Linking.openURL(phone ? `tel:${phone}` : brand.contactUrl).catch(() =>
+                setContactError(true),
+              );
+            }}
+            style={styles.contactLink}
+          >
+            <Icon
+              name={brand.contactPhone ? 'call-outline' : 'chatbubble-ellipses-outline'}
+              size={13}
+              color={c.primary}
+            />
+            <Copy style={styles.contactText}>{brand.contactPhone || 'Contact us'}</Copy>
+            {!brand.contactPhone && <Icon name="open-outline" size={10} color={c.primary} />}
+          </Pressable>
+        </View>
         <View style={styles.headerActions}>
           <Pressable
             accessibilityRole="link"
@@ -100,6 +140,11 @@ export function Header() {
           </Pressable>
         </View>
       </View>
+      {contactError && (
+        <Copy accessibilityRole="alert" style={styles.contactError}>
+          Couldn’t open contact details. Please try again.
+        </Copy>
+      )}
     </View>
   );
 }
@@ -184,7 +229,7 @@ export function CatalogBoundary({ children }: React.PropsWithChildren) {
         accessibilityLabel="Loading catalogue"
         style={styles.empty}
       >
-        <ActivityIndicator color={c.green} size="large" />
+        <ActivityIndicator color={c.primary} size="large" />
         <Copy>Finding your washroom essentials…</Copy>
       </View>
     );
@@ -225,31 +270,37 @@ export const styles = StyleSheet.create({
     maxWidth: 1200,
     alignSelf: 'center',
     paddingHorizontal: 22,
-    height: 88,
+    minHeight: 92,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
   },
-  brand: { flexDirection: 'row', alignItems: 'center', gap: 9 },
-  brandMark: {
-    height: 30,
-    width: 30,
-    borderRadius: 11,
-    backgroundColor: c.green,
-    alignItems: 'center',
-    justifyContent: 'center',
-    transform: [{ rotate: '-10deg' }],
+  brandColumn: { flexShrink: 1, paddingTop: 12, paddingBottom: 4 },
+  brand: { alignSelf: 'flex-start', justifyContent: 'center', minHeight: 35 },
+  brandImage: { width: 185, height: 35 },
+  brandText: {
+    fontFamily: f.bold,
+    letterSpacing: 0.3,
+    fontSize: 21,
+    lineHeight: 30,
+    color: c.primary,
   },
-  brandDot: { width: 13, height: 17, borderWidth: 3, borderColor: c.lime, borderRadius: 7 },
-  brandText: { fontFamily: f.bold, letterSpacing: -1.1, fontSize: 23, lineHeight: 27 },
-  brandSub: { fontSize: 7, letterSpacing: 1.5, fontFamily: f.bold },
+  contactLink: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    minHeight: 44,
+    alignSelf: 'flex-start',
+  },
+  contactText: { color: c.primary, fontSize: 12, fontFamily: f.medium },
+  contactError: { color: c.red, fontSize: 12, textAlign: 'center', padding: 8 },
   headerActions: { flexDirection: 'row', gap: 4 },
   iconButton: { width: 42, height: 44, alignItems: 'center', justifyContent: 'center' },
   badge: {
     position: 'absolute',
     right: 0,
     top: 0,
-    backgroundColor: c.green,
+    backgroundColor: c.primary,
     borderRadius: 10,
     minWidth: 18,
     height: 18,
@@ -258,7 +309,7 @@ export const styles = StyleSheet.create({
   },
   badgeText: { color: c.white, fontSize: 10, fontFamily: f.bold },
   action: {
-    backgroundColor: c.green,
+    backgroundColor: c.primary,
     paddingHorizontal: 20,
     paddingVertical: 14,
     minHeight: 48,
@@ -271,7 +322,7 @@ export const styles = StyleSheet.create({
   },
   secondary: { backgroundColor: c.soft },
   actionLabel: { color: c.white, fontFamily: f.bold, fontSize: 13 },
-  eyebrow: { fontSize: 10, fontFamily: f.bold, color: c.green, letterSpacing: 2 },
+  eyebrow: { fontSize: 10, fontFamily: f.bold, color: c.primary, letterSpacing: 2 },
   title: { fontSize: 32, fontFamily: f.bold, letterSpacing: -1 },
   notice: {
     flexDirection: 'row',
@@ -279,11 +330,11 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
     paddingVertical: 12,
     paddingHorizontal: 13,
-    backgroundColor: '#EDF1E5',
+    backgroundColor: '#EDF5FD',
     borderRadius: 7,
     marginBottom: 24,
   },
-  noticeText: { fontSize: 11, color: '#546D58', flex: 1, lineHeight: 17 },
+  noticeText: { fontSize: 11, color: '#436384', flex: 1, lineHeight: 17 },
   empty: {
     padding: 30,
     minHeight: 230,

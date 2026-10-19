@@ -62,7 +62,7 @@ export default function ProductDetail() {
                   'Explore this washroom essential from the Ozwashroom catalogue.'}
               </Copy>
               <View style={s.availability}>
-                <View style={[s.dot, { backgroundColor: product.available ? c.green : c.red }]} />
+                <View style={[s.dot, { backgroundColor: product.available ? c.primary : c.red }]} />
                 <Copy style={{ fontSize: 12 }}>
                   {product.available
                     ? catalog?.source === 'sample'
@@ -90,7 +90,7 @@ export default function ProductDetail() {
               />
               {added && (
                 <View accessibilityLiveRegion="polite" style={{ gap: 14 }}>
-                  <Copy style={{ color: c.green }}>Added to your cart.</Copy>
+                  <Copy style={{ color: c.primary }}>Added to your cart.</Copy>
                   <Action secondary label="View cart" onPress={() => router.navigate('/cart')} />
                 </View>
               )}
@@ -119,7 +119,7 @@ const s = StyleSheet.create({
   image: {
     flex: 1,
     minHeight: 330,
-    backgroundColor: '#EDF1E8',
+    backgroundColor: '#EEF5FB',
     borderRadius: 16,
     alignItems: 'center',
     justifyContent: 'center',
@@ -130,7 +130,7 @@ const s = StyleSheet.create({
   prices: { flexDirection: 'row', alignItems: 'center', gap: 12, flexWrap: 'wrap' },
   price: { fontFamily: f.bold, fontSize: 30 },
   was: { color: c.muted, textDecorationLine: 'line-through', fontSize: 18 },
-  saving: { color: c.green, fontFamily: f.bold, fontSize: 13 },
+  saving: { color: c.primary, fontFamily: f.bold, fontSize: 13 },
   description: { color: c.muted, lineHeight: 24 },
   availability: { flexDirection: 'row', alignItems: 'center', gap: 7 },
   dot: { width: 6, height: 6, borderRadius: 4 },

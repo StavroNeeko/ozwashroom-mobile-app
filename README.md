@@ -12,7 +12,7 @@ cp .env.example .env
 npm start
 ```
 
-With no Shopify domain or token, the app uses **clearly labelled sample data**. Sample names, illustrations, availability, prices and discounts are fictitious and do not represent live Ozwashroom offers. Sample mode requires no credentials or external image services. Fonts and original illustrations are bundled locally.
+With no Shopify domain or token, the app uses **clearly labelled sample data**. Sample names, availability, prices and discounts are fictitious and do not represent live Ozwashroom offers. Sample mode requires no credentials or external image services. Fonts are bundled locally. Sample products use neutral photo placeholders; live Shopify products use their own catalogue images.
 
 - **Android:** scan the QR code with Expo Go, or run `npm run android` with an Android emulator installed and running.
 - **iPhone:** scan the QR code with Camera and open compatible Expo Go. `npm run ios` opens an iOS Simulator on **macOS with Xcode**. Linux cannot run the iOS Simulator.
@@ -90,11 +90,17 @@ Offline mode uses Expo's SDK-bundled compatibility data; package downloads still
 ```text
 app/                  Expo Router tabs, product and collection routes
 src/catalog/          Shared types, sample catalogue, config and Shopify adapter
-src/components/       UI primitives, cards and original SVG illustrations
+src/components/       UI primitives, product cards and category icons
 src/state/            Catalogue loading and persisted local cart
 src/theme.ts          Colours and typography
 assets/               Original app icon and favicon
 tests/                Node unit tests and Playwright browser tests
 ```
 
-`CatalogService.load()` is the data boundary. `StoreProvider` chooses the service from public configuration. Screens consume normalized products, keeping Shopify fields outside the UI. DM Sans is distributed through `@expo-google-fonts/dm-sans` under its included font license. Icons use Ionicons through Expo. The wordmark and vector art are prototype placeholders to review alongside production brand/product assets.
+`CatalogService.load()` is the data boundary. `StoreProvider` chooses the service from public configuration. Screens consume normalized products, keeping Shopify fields outside the UI. DM Sans is distributed through `@expo-google-fonts/dm-sans` under its included font license. Icons use Ionicons through Expo. The original prototype wordmark and invented product illustrations have been removed. The header currently displays the company name as plain text until the official logo is provided; the launcher icon remains a prototype asset.
+
+## Brand assets and contact
+
+The visual theme now uses blue, navy and white. The promotional banner is approximately half its previous height: 165 points on phones and 160 on larger screens, with content allowed to expand for larger accessibility text sizes. The precise website blue still needs verification against the official logo or website styles.
+
+The owner-confirmed phone **1300 652 725** appears under the header and opens `tel:1300652725`. Optional public overrides are documented in `.env.example`: `EXPO_PUBLIC_BRAND_LOGO_URL` (PNG/JPEG), `EXPO_PUBLIC_CONTACT_PHONE` and `EXPO_PUBLIC_CONTACT_URL`. Restart Metro after changing them. The official logo and product photography were unavailable to the implementation environment, so the app uses plain company-name text and neutral photo placeholders. No replacement photographs or logos have been invented. Product photos will appear from configured Shopify data; an official logo can be supplied using the branding setting or bundled once the asset is available. The sample names and pricing remain explicitly illustrative.

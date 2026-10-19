@@ -12,8 +12,8 @@ export default function TabLayout() {
     <Tabs
       screenOptions={{
         headerShown: false,
-        tabBarActiveTintColor: colors.green,
-        tabBarInactiveTintColor: '#839186',
+        tabBarActiveTintColor: colors.primary,
+        tabBarInactiveTintColor: '#7C899A',
         tabBarStyle: {
           backgroundColor: colors.white,
           borderTopColor: colors.line,
@@ -30,7 +30,7 @@ export default function TabLayout() {
         options={{
           title: 'Home',
           tabBarIcon: ({ focused }) => (
-            <Icon name="home-outline" color={focused ? colors.green : '#839186'} />
+            <Icon name="home-outline" color={focused ? colors.primary : '#7C899A'} />
           ),
         }}
       />
@@ -39,7 +39,7 @@ export default function TabLayout() {
         options={{
           title: 'Categories',
           tabBarIcon: ({ focused }) => (
-            <Icon name="grid-outline" color={focused ? colors.green : '#839186'} />
+            <Icon name="grid-outline" color={focused ? colors.primary : '#7C899A'} />
           ),
         }}
       />
@@ -48,7 +48,7 @@ export default function TabLayout() {
         options={{
           title: 'Search',
           tabBarIcon: ({ focused }) => (
-            <Icon name="search-outline" color={focused ? colors.green : '#839186'} />
+            <Icon name="search-outline" color={focused ? colors.primary : '#7C899A'} />
           ),
         }}
       />
@@ -58,7 +58,7 @@ export default function TabLayout() {
           title: 'Cart',
           tabBarBadge: count || undefined,
           tabBarIcon: ({ focused }) => (
-            <Icon name="bag-handle-outline" color={focused ? colors.green : '#839186'} />
+            <Icon name="bag-handle-outline" color={focused ? colors.primary : '#7C899A'} />
           ),
         }}
       />
@@ -67,7 +67,7 @@ export default function TabLayout() {
         options={{
           title: 'Account',
           tabBarIcon: ({ focused }) => (
-            <Icon name="person-outline" color={focused ? colors.green : '#839186'} />
+            <Icon name="person-outline" color={focused ? colors.primary : '#7C899A'} />
           ),
         }}
       />

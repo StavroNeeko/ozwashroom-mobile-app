@@ -10,7 +10,6 @@ import {
   savingsPercent,
 } from '../catalog/types';
 import { colors as c, fonts as f } from '../theme';
-import { ProductArt } from './Artwork';
 import { Copy, Icon } from './ui';
 
 export function ProductImage({ product, size = 150 }: { product: Product; size?: number }) {
@@ -24,7 +23,13 @@ export function ProductImage({ product, size = 150 }: { product: Product; size?:
       onError={() => setFailed(true)}
     />
   ) : (
-    <ProductArt category={product.category} size={size} />
+    <View
+      accessibilityLabel={`Photo unavailable for ${product.title}`}
+      style={{ width: size, height: size, alignItems: 'center', justifyContent: 'center', gap: 9 }}
+    >
+      <Icon name="image-outline" size={Math.min(36, size / 3)} color={c.muted} />
+      {size >= 100 && <Copy style={{ color: c.muted, fontSize: 11 }}>Photo coming soon</Copy>}
+    </View>
   );
 }
 export function ProductCard({
@@ -158,9 +163,9 @@ const s = StyleSheet.create({
     borderRadius: 12,
     overflow: 'hidden',
     borderWidth: 1,
-    borderColor: '#E5EAE2',
+    borderColor: '#DFE8F1',
   },
-  art: { height: 176, backgroundColor: '#EFF2EC', alignItems: 'center', justifyContent: 'center' },
+  art: { height: 176, backgroundColor: '#FFFFFF', alignItems: 'center', justifyContent: 'center' },
   cardBody: { padding: 14, gap: 7 },
   category: { fontSize: 9, color: c.muted, textTransform: 'uppercase', letterSpacing: 0.6 },
   productTitle: { fontSize: 14, fontFamily: f.medium, lineHeight: 21, minHeight: 42 },
@@ -175,10 +180,10 @@ const s = StyleSheet.create({
     zIndex: 1,
     paddingHorizontal: 8,
     paddingVertical: 5,
-    backgroundColor: c.lime,
+    backgroundColor: c.accent,
     borderRadius: 4,
   },
-  saleText: { fontSize: 9, fontFamily: f.bold, color: '#385324', letterSpacing: 0.3 },
+  saleText: { fontSize: 9, fontFamily: f.bold, color: '#005DA8', letterSpacing: 0.3 },
   newBadge: {
     position: 'absolute',
     left: 12,
