@@ -147,3 +147,10 @@ vite.config.ts.timestamp-*
 
 # Turbo Repo
 .turbo
+
+# Expo and local validation output
+.expo/
+expo-env.d.ts
+playwright-report/
+test-results/
+dist-native/

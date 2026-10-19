@@ -1,0 +1,9 @@
+node_modules
+.npm
+.expo
+dist
+dist-native
+package-lock.json
+expo-env.d.ts
+test-results
+playwright-report
