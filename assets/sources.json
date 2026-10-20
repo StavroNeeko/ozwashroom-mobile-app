@@ -1,0 +1,101 @@
+{
+  "retrievedOn": "2026-10-19",
+  "website": "https://www.ozwashroom.com.au",
+  "logo": {
+    "file": "assets/ozwashroom-logo.png",
+    "url": "https://www.ozwashroom.com.au/cdn/shop/files/ozwashroom-australia-logo.png?v=1756965343&width=600"
+  },
+  "icon": {
+    "file": "assets/icon.png",
+    "url": "https://www.ozwashroom.com.au/cdn/shop/files/ozwashroom-favicon.webp?v=1729689850&width=1024&height=1024&crop=center&format=png"
+  },
+  "favicon": {
+    "file": "assets/favicon.png",
+    "url": "https://www.ozwashroom.com.au/cdn/shop/files/ozwashroom-favicon.webp?v=1729689850&width=64&height=64&crop=center&format=png"
+  },
+  "colors": {
+    "primary": {
+      "hex": "#4146B0",
+      "source": "https://www.ozwashroom.com.au/cdn/shop/t/21/assets/custom.css?v=54333868349970026401788520974",
+      "evidence": ":root --primary-color; homepage --color-button: 65,70,176"
+    },
+    "websiteBlue": {
+      "hex": "#3773ED",
+      "source": "https://www.ozwashroom.com.au/cdn/shop/t/21/assets/final.css?v=114705904814873290551791346801",
+      "evidence": "announcement-bar-section .gradient background-color; homepage category borders and links"
+    }
+  },
+  "products": [
+    {
+      "id": "dryer-01",
+      "title": "Vortex Hand Dryer \u2013 Super Quiet Motor | 3-Year Warranty",
+      "productUrl": "https://www.ozwashroom.com.au/products/vortex-hand-dryer-super-quiet-motor-3-years-warranty",
+      "imageUrl": "https://cdn.shopify.com/s/files/1/0885/8927/1316/files/oz210-3_1_Super_Quiet_Motor.png?v=1756973779&width=800&format=png",
+      "file": "assets/products/dryer-01.png"
+    },
+    {
+      "id": "soap-02",
+      "title": "Automatic Sanitiser/Soap Dispenser Black",
+      "productUrl": "https://www.ozwashroom.com.au/products/automatic-sanitiser-soap-dispenser-black-1",
+      "imageUrl": "https://cdn.shopify.com/s/files/1/0885/8927/1316/files/SDA72-K_00.png?v=1757490376&width=800&format=png",
+      "file": "assets/products/soap-02.png"
+    },
+    {
+      "id": "towel-03",
+      "title": "Stainless Steel Slim Paper Towel Dispenser",
+      "productUrl": "https://www.ozwashroom.com.au/products/stainless-steel-slim-paper-towel-dispenser-1",
+      "imageUrl": "https://cdn.shopify.com/s/files/1/0885/8927/1316/files/TDSS37-2.png?v=1787718325&width=800&format=png",
+      "file": "assets/products/towel-03.png"
+    },
+    {
+      "id": "rail-04",
+      "title": "JD Macdonald Straight Grab Rail JDM-GSN",
+      "productUrl": "https://www.ozwashroom.com.au/products/jd-macdonald-straight-grab-rail-jdm-gsn",
+      "imageUrl": "https://cdn.shopify.com/s/files/1/0885/8927/1316/files/jdm-gsn_4-1.png?v=1727279567&width=800&format=png",
+      "file": "assets/products/rail-04.png"
+    },
+    {
+      "id": "baby-05",
+      "title": "Kanga Kare Baby Change Station Grey with Braille",
+      "productUrl": "https://www.ozwashroom.com.au/products/kanga-kare-baby-change-station-grey-with-braille",
+      "imageUrl": "https://cdn.shopify.com/s/files/1/0885/8927/1316/files/kk1689-6.jpg?v=1764040518&width=800&format=png",
+      "file": "assets/products/baby-05.png"
+    },
+    {
+      "id": "bin-06",
+      "title": "Grey Slim Sanitary Bin 18L Female Hygiene Waste Disposal Unit",
+      "productUrl": "https://www.ozwashroom.com.au/products/sanitary-bin-grey-slim-lady-female-waste-disposal",
+      "imageUrl": "https://cdn.shopify.com/s/files/1/0885/8927/1316/files/sb015-l.png?v=1727279790&width=800&format=png",
+      "file": "assets/products/bin-06.png"
+    },
+    {
+      "id": "dryer-07",
+      "title": "Vortex Stainless Steel Compact Hand Dryer Matte Black",
+      "productUrl": "https://www.ozwashroom.com.au/products/vortex-matte-black-stainless-steel-compact-hand-dryer",
+      "imageUrl": "https://cdn.shopify.com/s/files/1/0885/8927/1316/files/VX2805K_Compact_Hand_Dryer.png?v=1756971315&width=800&format=png",
+      "file": "assets/products/dryer-07.png"
+    },
+    {
+      "id": "soap-08",
+      "title": "Soap Dispenser Satin Finish S'Steel Refillable Lockable 1L",
+      "productUrl": "https://www.ozwashroom.com.au/products/soap-dispenser-satin-finish-ssteel-refillable-lockable-1l",
+      "imageUrl": "https://cdn.shopify.com/s/files/1/0885/8927/1316/files/sdss30_1.jpg?v=1727279159&width=800&format=png",
+      "file": "assets/products/soap-08.png"
+    },
+    {
+      "id": "towel-09",
+      "title": "Compact paper towel dispenser T501",
+      "productUrl": "https://www.ozwashroom.com.au/products/compact-paper-towel-dispenser-t501",
+      "imageUrl": "https://cdn.shopify.com/s/files/1/0885/8927/1316/files/T501-3-SQ-removebg.png?v=1785895175&width=800&format=png",
+      "file": "assets/products/towel-09.png"
+    },
+    {
+      "id": "rail-10",
+      "title": "JD Macdonald Ambulant Grab Rail 1 Pair",
+      "productUrl": "https://www.ozwashroom.com.au/products/jd-macdonald-ambulant-grab-rail-1-pair",
+      "imageUrl": "https://cdn.shopify.com/s/files/1/0885/8927/1316/files/jdm-gal_3-1.png?v=1727279583&width=800&format=png",
+      "file": "assets/products/rail-10.png"
+    }
+  ],
+  "note": "Official photos and matching product names, bundled for the sample preview. Sample prices, discounts, availability and arrival dates are illustrative, not a live offer. Images remain the property of their respective owners."
+}

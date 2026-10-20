@@ -46,12 +46,15 @@ test('Shopify uses Australian context, public token, pagination and configured c
     const body = JSON.parse(options?.body as string);
     assert.match(body.query, /@inContext\(country: AU\)/);
     calls.push(body);
-    if (body.query.includes('query Products'))
+    if (body.query.includes('query Products')) {
+      assert.match(body.query, /images\(first: 3\)/);
+      assert.match(body.query, /maxWidth: 800, maxHeight: 800, preferredContentType: JPG/);
       return response({
         products: body.variables.after
           ? connection([{ ...product, id: 'product-2' }])
           : connection([product], true, 'page-2'),
       });
+    }
     if (body.variables.handle === 'our-deals')
       return response({
         collection: {
@@ -166,4 +169,36 @@ test('sample mode requires absent credentials; partial or invalid configuration 
       else process.env[key] = originals[i];
     });
   }
+});
+
+test('Shopify photos fall back to the selected variant and gallery without borrowing another variant image', () => {
+  const photo = (name: string) => ({ url: `https://cdn.shopify.com/${name}.jpg`, altText: name });
+  const gallery = photo('gallery');
+  const selected = photo('selected');
+  const node = {
+    ...product,
+    featuredImage: null,
+    images: { nodes: [gallery, gallery] },
+    variants: {
+      nodes: [
+        { ...variant, id: 'unavailable', availableForSale: false, image: photo('wrong-variant') },
+        { ...variant, image: selected },
+      ],
+      pageInfo: { hasNextPage: false },
+    },
+  };
+  const normalized = normalizeProduct(node, null);
+  assert.equal(normalized.imageUrl, selected.url);
+  assert.equal(normalized.imageAlt, 'selected');
+  assert.deepEqual(normalized.imageUrls, [selected.url, gallery.url]);
+  const galleryOnly = normalizeProduct({ ...node, variants: product.variants }, null);
+  assert.equal(galleryOnly.imageUrl, gallery.url);
+  const featured = normalizeProduct({ ...node, featuredImage: photo('featured') }, null);
+  assert.deepEqual(featured.imageUrls, [photo('featured').url, selected.url, gallery.url]);
+  const missing = normalizeProduct(
+    { ...node, images: { nodes: [] }, variants: product.variants },
+    null,
+  );
+  assert.equal(missing.imageUrl, undefined);
+  assert.deepEqual(missing.imageUrls, []);
 });

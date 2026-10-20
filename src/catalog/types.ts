@@ -17,6 +17,7 @@ export type Product = {
   currency: 'AUD';
   available: boolean;
   imageUrl?: string;
+  imageUrls?: string[];
   imageAlt?: string;
   createdAt: string;
 };

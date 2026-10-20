@@ -23,7 +23,7 @@ export default function RootLayout() {
           justifyContent: 'center',
         }}
       >
-        <ActivityIndicator accessibilityLabel="Loading app" color={colors.green} />
+        <ActivityIndicator accessibilityLabel="Loading app" color={colors.primary} />
       </View>
     );
   return (

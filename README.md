@@ -12,7 +12,7 @@ cp .env.example .env
 npm start
 ```
 
-With no Shopify domain or token, the app uses **clearly labelled sample data**. Sample names, illustrations, availability, prices and discounts are fictitious and do not represent live Ozwashroom offers. Sample mode requires no credentials or external image services. Fonts and original illustrations are bundled locally.
+With no Shopify domain or token, the app uses **clearly labelled sample data**. Product names and photos are sourced from the official website; sample availability, arrival dates, prices and discounts are fictitious and do not represent live Ozwashroom offers. Sample mode requires no credentials or external image services. Fonts are bundled locally. Ten official product photos and the company logo are bundled for offline previews; live Shopify products use their own catalogue images.
 
 - **Android:** scan the QR code with Expo Go, or run `npm run android` with an Android emulator installed and running.
 - **iPhone:** scan the QR code with Camera and open compatible Expo Go. `npm run ios` opens an iOS Simulator on **macOS with Xcode**. Linux cannot run the iOS Simulator.
@@ -36,6 +36,14 @@ Web uses a client-rendered single-page shell with eager Expo Router routes. This
 **Checkout, payments, customer login and order creation are not implemented.** The cart is local and never creates a Shopify order or checkout. Sample and Shopify carts use separate storage keys. Stored variant IDs and quantities are reconciled with current prices and availability on launch/refresh.
 
 ## Connect Shopify Storefront
+
+For Ozwashroom, `shopify.env.example` provides the verified store domain and collection mappings. Copy it to your local `.env`, enter your **public Storefront API token**, then restart Expo with `npx expo start --clear`. Do not start with the token blank: a partially configured live connection shows a configuration error instead of demo prices.
+
+In Shopify admin, add/open the **Headless** sales channel, choose **Create storefront** (for example, “Ozwashroom mobile”), then use **Manage API access → Storefront API → Manage** to find the **public access token**. Enable product/collection read access and publish the products and collections you want to that storefront. See [Shopify's public-token setup](https://shopify.dev/docs/api/storefront-web-components/getting-started). Private tokens and Admin API tokens do not belong in this mobile app.
+
+The website identifies the store as `ozwashroom.myshopify.com`. Public collections were checked on 19 October 2026: baby change stations use `baby-change-table`, grab rails use `grab-rail`, and the populated Flash Sale collection uses `flash-sale-1` (`flash-sale` is empty). The live template includes these mappings. Public website visibility does not establish Headless-channel availability; verify that publication separately. You can change the deals collection handle in `.env` to choose a different collection for Special Deals.
+
+Once connected, Shopify controls product names, images, selling/compare-at prices and availability. Home pull-to-refresh or reopening the app reloads the catalogue; API configuration and collection mapping changes require an Expo restart/rebuild. Checkout remains unavailable in this version.
 
 1. Configure a **public Storefront API token** with read access to products and collections (for example, using the Headless channel). Publish the desired products and collections to that storefront. Do not use an Admin API token or a private Storefront token.
 2. Copy `.env.example` to `.env` and set both domain and public token:
@@ -68,6 +76,7 @@ npm run export:web
 npx expo export --platform ios --platform android --output-dir dist-native --max-workers 2
 npx playwright install chromium
 npm run test:e2e
+npm run test:e2e:shopify
 ```
 
 Native exports verify JavaScript/Hermes bundles; they do **not** compile or install native apps. Device testing and a real-store smoke test remain release checks. Unit tests cover selection, discounts, currency, pagination, API failures/cancellation, configuration and cart quantities. Playwright exercises browsing, cart persistence, search, categories, Account and responsive layouts at phone/desktop sizes. Its managed Metro server forces sample mode. Stop other servers on port 8081 before CI runs.
@@ -90,11 +99,27 @@ Offline mode uses Expo's SDK-bundled compatibility data; package downloads still
 ```text
 app/                  Expo Router tabs, product and collection routes
 src/catalog/          Shared types, sample catalogue, config and Shopify adapter
-src/components/       UI primitives, cards and original SVG illustrations
+src/components/       UI primitives, product cards and category icons
 src/state/            Catalogue loading and persisted local cart
 src/theme.ts          Colours and typography
-assets/               Original app icon and favicon
+assets/               Official logo, product photos, website icons and source manifest
 tests/                Node unit tests and Playwright browser tests
 ```
 
-`CatalogService.load()` is the data boundary. `StoreProvider` chooses the service from public configuration. Screens consume normalized products, keeping Shopify fields outside the UI. DM Sans is distributed through `@expo-google-fonts/dm-sans` under its included font license. Icons use Ionicons through Expo. The wordmark and vector art are prototype placeholders to review alongside production brand/product assets.
+`CatalogService.load()` is the data boundary. `StoreProvider` chooses the service from public configuration. Screens consume normalized products, keeping Shopify fields outside the UI. DM Sans is distributed through `@expo-google-fonts/dm-sans` under its included font license. Icons use Ionicons through Expo. Official brand and product assets are recorded in `assets/sources.json`, including exact source URLs, product names and retrieval date.
+
+## Brand assets and contact
+
+Brand assets were retrieved from [ozwashroom.com.au](https://www.ozwashroom.com.au) on **19 October 2026**. The bundled header/footer PNG is the official `ozwashroom-australia-logo.png`. The website's primary button color **#4146B0** is used for buttons, active tabs and contact links; the verified announcement/category accent **#3773ED** is used for the compact promotional banner. Sources and CSS selectors are recorded in `assets/sources.json`.
+
+The banner remains approximately half its original height: 165 points on phones and 160 on larger screens, with room to expand for accessibility text sizes. Product images use contain sizing so tall dispensers and wide grab rails are visible without cropping. Ten official product names and corresponding photos cover all six sample categories. Photos are bundled and require no image host access in sample mode; missing or failed live images retain the neutral fallback. Sample prices, discounts, availability and arrival dates remain illustrative, with visible notices on browsing, product and cart screens. These are preview fixtures, not a snapshot of current store offers.
+
+The official website phone **1300 652 715**, confirmed by the owner, appears under the header and opens `tel:1300652715`. Optional public overrides are documented in `.env.example`: `EXPO_PUBLIC_BRAND_LOGO_URL` (PNG/JPEG), `EXPO_PUBLIC_CONTACT_PHONE` and `EXPO_PUBLIC_CONTACT_URL`. Restart Metro after changing them. If a remote logo fails, the bundled official logo appears.
+
+The website's official favicon replaces the invented prototype icon. Its source is only **32×32 pixels**, even when a larger size is requested from Shopify; a high-resolution square brand asset is still needed for final app-store launcher artwork. Header and product assets are used at their original aspect ratios. Images remain the property of their respective owners.
+
+## Live product image handling
+
+Shopify image requests are bounded to 800×800 pixels and prefer JPEG for mobile compatibility. Each product keeps its featured image, its selected variant image and up to three gallery images as ordered, deduplicated candidates. If a download fails, the UI tries the next candidate; products with no working image retain the neutral placeholder. A refreshed product can retry its image downloads. This applies to Special Deals, New Arrivals, category grids, details and the cart.
+
+`npm run test:e2e:shopify` runs phone/desktop browser regressions against intercepted Shopify responses on port 8082. It uses a dummy public token and local image fixtures, not the live store. It covers missing featured images, failed downloads with a gallery backup, and products without photography; the regular sample browser suite remains on port 8081. Real-device and live-catalogue verification remain separate checks.

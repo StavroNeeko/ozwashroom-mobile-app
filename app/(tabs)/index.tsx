@@ -1,5 +1,6 @@
 import React from 'react';
 import {
+  Image,
   Pressable,
   RefreshControl,
   ScrollView,
@@ -11,8 +12,8 @@ import { router } from 'expo-router';
 import { categories, selectCollection } from '../../src/catalog/types';
 import { useStore } from '../../src/state/Store';
 import { colors as c, fonts as f } from '../../src/theme';
-import { Action, CatalogBoundary, Copy, Icon, SourceNotice, styles } from '../../src/components/ui';
-import { BathroomArt, ProductArt } from '../../src/components/Artwork';
+import { CatalogBoundary, Copy, Icon, SourceNotice, styles } from '../../src/components/ui';
+import { CategoryIcon } from '../../src/components/CategoryIcon';
 import { ProductSection } from '../../src/components/Products';
 
 export default function Home() {
@@ -24,7 +25,7 @@ export default function Home() {
       style={styles.page}
       contentContainerStyle={{ paddingBottom: 38 }}
       refreshControl={
-        <RefreshControl refreshing={loading} onRefresh={refresh} tintColor={c.green} />
+        <RefreshControl refreshing={loading} onRefresh={refresh} tintColor={c.primary} />
       }
     >
       <View style={styles.container}>
@@ -44,31 +45,33 @@ export default function Home() {
             <Icon name="options-outline" size={18} />
           </View>
         </Pressable>
-        <View style={[s.hero, compact && { minHeight: 330 }]}>
+        <View testID="home-promo-banner" style={[s.hero, { minHeight: compact ? 165 : 160 }]}>
           <View
-            style={[s.heroCopy, { width: compact ? '62%' : '53%', padding: compact ? 22 : 35 }]}
+            pointerEvents="none"
+            accessibilityElementsHidden
+            importantForAccessibility="no-hide-descendants"
+            style={s.heroDecoration}
           >
+            <View style={s.heroRing} />
+            <View style={s.heroDisc} />
+          </View>
+          <View style={s.heroCopy}>
             <View style={s.pill}>
               <View style={s.pillDot} />
-              <Copy style={s.pillText}>THE EVERYDAY, ELEVATED</Copy>
+              <Copy style={s.pillText}>OZWASHROOM ESSENTIALS</Copy>
             </View>
-            <Copy accessibilityRole="header" style={[s.heroTitle, { fontSize: compact ? 34 : 49 }]}>
-              Better spaces.{'\n'}Start here.
+            <Copy accessibilityRole="header" style={[s.heroTitle, { fontSize: compact ? 24 : 28 }]}>
+              Better washrooms.{'\n'}Every detail covered.
             </Copy>
-            <Copy style={[s.heroSubtitle, { maxWidth: compact ? 180 : 260 }]}>
-              Considered essentials for a washroom that works beautifully.
-            </Copy>
-            <Action
-              label="Shop essentials"
-              icon="arrow-forward"
+            <Pressable
+              accessibilityRole="link"
+              accessibilityLabel="Shop essentials"
+              style={s.heroLink}
               onPress={() => router.navigate('/categories')}
-            />
-          </View>
-          <View style={[s.heroArt, { width: compact ? '44%' : '47%' }]}>
-            <BathroomArt />
-          </View>
-          <View style={s.heroNumber}>
-            <Copy style={s.heroNumberText}>01 / EVERYDAY ESSENTIALS</Copy>
+            >
+              <Copy style={s.heroLinkText}>Shop essentials</Copy>
+              <Icon name="arrow-forward" size={16} color={c.white} />
+            </Pressable>
           </View>
         </View>
         <View style={s.values}>
@@ -130,7 +133,7 @@ export default function Home() {
                       }}
                     >
                       <View style={s.categoryCircle}>
-                        <ProductArt category={category.id} size={85} />
+                        <CategoryIcon category={category.id} size={30} />
                       </View>
                       <Copy style={s.categoryLabel}>{category.shortTitle}</Copy>
                     </Pressable>
@@ -144,7 +147,7 @@ export default function Home() {
               />
               <View style={s.editorial}>
                 <View style={s.editorialIcon}>
-                  <Icon name="leaf-outline" size={30} color={c.lime} />
+                  <Icon name="business-outline" size={30} color={c.white} />
                 </View>
                 <View style={{ flex: 1, gap: 6 }}>
                   <Copy style={s.editorialTitle}>Small details. Lasting impressions.</Copy>
@@ -163,11 +166,16 @@ export default function Home() {
           )}
         </CatalogBoundary>
         <View style={s.footer}>
-          <Copy style={{ fontFamily: f.bold, fontSize: 19, letterSpacing: -0.6 }}>ozwashroom.</Copy>
+          <Image
+            source={require('../../assets/ozwashroom-logo.png')}
+            accessibilityLabel="Ozwashroom logo"
+            resizeMode="contain"
+            style={{ width: 185, height: 36 }}
+          />
           <Copy style={{ color: c.muted, fontSize: 11 }}>Better spaces. Every day.</Copy>
           <Copy style={s.footerNote}>
             {catalog?.source === 'sample'
-              ? 'Demo catalogue. Products, offers and prices are illustrative.\nNo orders or payments are processed.'
+              ? 'Demo catalogue. Official product photos; illustrative offers and prices.\nNo orders or payments are processed.'
               : 'Browse the catalogue. Checkout is not available in this version.'}
           </Copy>
         </View>
@@ -192,31 +200,54 @@ const s = StyleSheet.create({
   },
   searchFilter: { borderLeftWidth: 1, borderLeftColor: c.line, paddingLeft: 13 },
   hero: {
-    minHeight: 320,
-    backgroundColor: '#E7EDDF',
-    borderRadius: 16,
+    backgroundColor: c.websiteBlue,
+    borderRadius: 12,
     overflow: 'hidden',
     position: 'relative',
   },
-  heroCopy: { zIndex: 2, gap: 16, alignItems: 'flex-start' },
-  pill: { flexDirection: 'row', alignItems: 'center', gap: 6 },
-  pillDot: { width: 5, height: 5, backgroundColor: c.green, borderRadius: 4 },
-  pillText: { fontSize: 8, letterSpacing: 1.2, fontFamily: f.bold },
-  heroTitle: { fontFamily: f.bold, lineHeight: undefined, letterSpacing: -1.8 },
-  heroSubtitle: { color: '#607564', fontSize: 13, lineHeight: 20 },
-  heroArt: { position: 'absolute', right: 0, top: 0, bottom: 0 },
-  heroNumber: {
-    position: 'absolute',
-    right: 12,
-    bottom: 12,
-    backgroundColor: '#F7F8EDC9',
-    borderRadius: 4,
-    padding: 6,
+  heroCopy: {
+    paddingHorizontal: 20,
+    paddingTop: 14,
+    paddingBottom: 6,
+    gap: 5,
+    alignItems: 'flex-start',
   },
-  heroNumberText: { fontSize: 7, letterSpacing: 1.2 },
+  pill: { flexDirection: 'row', alignItems: 'center', gap: 6 },
+  pillDot: { width: 5, height: 5, backgroundColor: '#BBDDFF', borderRadius: 4 },
+  pillText: { color: '#DBEDFF', fontSize: 9, letterSpacing: 1.4, fontFamily: f.bold },
+  heroTitle: { color: c.white, fontFamily: f.bold, letterSpacing: -0.7, lineHeight: 29 },
+  heroLink: { flexDirection: 'row', gap: 10, alignItems: 'center', minHeight: 44 },
+  heroLinkText: { color: c.white, fontFamily: f.bold, fontSize: 12 },
+  heroDecoration: {
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    right: 0,
+    width: '36%',
+    overflow: 'hidden',
+  },
+  heroRing: {
+    position: 'absolute',
+    width: 225,
+    height: 225,
+    borderRadius: 140,
+    borderWidth: 28,
+    borderColor: '#FFFFFF0D',
+    right: -110,
+    top: -60,
+  },
+  heroDisc: {
+    position: 'absolute',
+    width: 130,
+    height: 130,
+    borderRadius: 75,
+    backgroundColor: '#FFFFFF0C',
+    right: -12,
+    bottom: -80,
+  },
   values: { flexDirection: 'row', justifyContent: 'space-between', paddingVertical: 21, gap: 8 },
   value: { flexDirection: 'row', alignItems: 'center', gap: 6, flexShrink: 1 },
-  valueText: { fontSize: 10, color: '#607564', flexShrink: 1 },
+  valueText: { fontSize: 10, color: c.muted, flexShrink: 1 },
   categorySection: {
     marginTop: 36,
     paddingVertical: 25,
@@ -233,7 +264,7 @@ const s = StyleSheet.create({
   sectionTitle: { fontFamily: f.bold, fontSize: 23, letterSpacing: -0.7, marginTop: 7 },
   viewAll: { flexDirection: 'row', alignItems: 'center', gap: 6, minHeight: 44 },
   categoryCircle: {
-    backgroundColor: '#E9EEE3',
+    backgroundColor: c.soft,
     borderRadius: 60,
     width: 94,
     height: 94,
@@ -255,12 +286,12 @@ const s = StyleSheet.create({
     height: 56,
     borderRadius: 40,
     borderWidth: 1,
-    borderColor: '#416353',
+    borderColor: '#456587',
     alignItems: 'center',
     justifyContent: 'center',
   },
-  editorialTitle: { color: '#F2F6E9', fontFamily: f.bold, fontSize: 19, letterSpacing: -0.4 },
-  editorialBody: { color: '#B7CBBB', fontSize: 12, lineHeight: 19, maxWidth: 550 },
+  editorialTitle: { color: c.white, fontFamily: f.bold, fontSize: 19, letterSpacing: -0.4 },
+  editorialBody: { color: '#C4D7EE', fontSize: 12, lineHeight: 19, maxWidth: 550 },
   footer: {
     alignItems: 'center',
     marginTop: 44,

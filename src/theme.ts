@@ -1,12 +1,14 @@
 export const colors = {
-  ink: '#163C36',
-  muted: '#70817A',
-  green: '#145C4C',
-  lime: '#DBEE9C',
-  canvas: '#F7F8F4',
+  ink: '#142D4D',
+  muted: '#65758A',
+  // Verified website button color and announcement/category accent; see assets/sources.json.
+  primary: '#4146B0',
+  websiteBlue: '#3773ED',
+  accent: '#E3F0FC',
+  canvas: '#F5F8FC',
   white: '#FFFFFF',
-  line: '#E2E8E0',
-  soft: '#EDF2E8',
+  line: '#DFE8F1',
+  soft: '#EDF5FD',
   gold: '#B97E2D',
   red: '#B34F3C',
 };

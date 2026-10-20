@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Image, Pressable, ScrollView, StyleSheet, View, useWindowDimensions } from 'react-native';
 import { router } from 'expo-router';
 import {
@@ -10,21 +10,32 @@ import {
   savingsPercent,
 } from '../catalog/types';
 import { colors as c, fonts as f } from '../theme';
-import { ProductArt } from './Artwork';
 import { Copy, Icon } from './ui';
+import { bundledProductPhotos } from './productPhotos';
 
 export function ProductImage({ product, size = 150 }: { product: Product; size?: number }) {
-  const [failed, setFailed] = useState(false);
-  return product.imageUrl && !failed ? (
+  const [failedUrls, setFailedUrls] = useState<string[]>([]);
+  useEffect(() => setFailedUrls([]), [product]);
+  const imageUrl = [product.imageUrl, ...(product.imageUrls ?? [])].find(
+    (url): url is string => !!url && !failedUrls.includes(url),
+  );
+  return imageUrl ? (
     <Image
-      source={{ uri: product.imageUrl }}
+      key={imageUrl}
+      source={bundledProductPhotos[imageUrl] || { uri: imageUrl }}
       accessibilityLabel={product.imageAlt || product.title}
       style={{ width: size, height: size }}
       resizeMode="contain"
-      onError={() => setFailed(true)}
+      onError={() => setFailedUrls((previous) => [...new Set([...previous, imageUrl])])}
     />
   ) : (
-    <ProductArt category={product.category} size={size} />
+    <View
+      accessibilityLabel={`Photo unavailable for ${product.title}`}
+      style={{ width: size, height: size, alignItems: 'center', justifyContent: 'center', gap: 9 }}
+    >
+      <Icon name="image-outline" size={Math.min(36, size / 3)} color={c.muted} />
+      {size >= 100 && <Copy style={{ color: c.muted, fontSize: 11 }}>Photo coming soon</Copy>}
+    </View>
   );
 }
 export function ProductCard({
@@ -54,7 +65,10 @@ export function ProductCard({
             <Copy style={s.newText}>NEW</Copy>
           </View>
         ) : null}
-        <ProductImage product={product} size={155} />
+        <ProductImage
+          product={product}
+          size={typeof width === 'number' ? Math.min(155, width - 24) : 155}
+        />
         <View style={s.corner}>
           <Icon name="arrow-forward" size={16} />
         </View>
@@ -158,9 +172,9 @@ const s = StyleSheet.create({
     borderRadius: 12,
     overflow: 'hidden',
     borderWidth: 1,
-    borderColor: '#E5EAE2',
+    borderColor: '#DFE8F1',
   },
-  art: { height: 176, backgroundColor: '#EFF2EC', alignItems: 'center', justifyContent: 'center' },
+  art: { height: 176, backgroundColor: '#FFFFFF', alignItems: 'center', justifyContent: 'center' },
   cardBody: { padding: 14, gap: 7 },
   category: { fontSize: 9, color: c.muted, textTransform: 'uppercase', letterSpacing: 0.6 },
   productTitle: { fontSize: 14, fontFamily: f.medium, lineHeight: 21, minHeight: 42 },
@@ -175,10 +189,10 @@ const s = StyleSheet.create({
     zIndex: 1,
     paddingHorizontal: 8,
     paddingVertical: 5,
-    backgroundColor: c.lime,
+    backgroundColor: c.accent,
     borderRadius: 4,
   },
-  saleText: { fontSize: 9, fontFamily: f.bold, color: '#385324', letterSpacing: 0.3 },
+  saleText: { fontSize: 9, fontFamily: f.bold, color: c.primary, letterSpacing: 0.3 },
   newBadge: {
     position: 'absolute',
     left: 12,
