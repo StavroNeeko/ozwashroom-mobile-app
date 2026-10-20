@@ -76,6 +76,7 @@ npm run export:web
 npx expo export --platform ios --platform android --output-dir dist-native --max-workers 2
 npx playwright install chromium
 npm run test:e2e
+npm run test:e2e:shopify
 ```
 
 Native exports verify JavaScript/Hermes bundles; they do **not** compile or install native apps. Device testing and a real-store smoke test remain release checks. Unit tests cover selection, discounts, currency, pagination, API failures/cancellation, configuration and cart quantities. Playwright exercises browsing, cart persistence, search, categories, Account and responsive layouts at phone/desktop sizes. Its managed Metro server forces sample mode. Stop other servers on port 8081 before CI runs.
@@ -116,3 +117,9 @@ The banner remains approximately half its original height: 165 points on phones 
 The official website phone **1300 652 715**, confirmed by the owner, appears under the header and opens `tel:1300652715`. Optional public overrides are documented in `.env.example`: `EXPO_PUBLIC_BRAND_LOGO_URL` (PNG/JPEG), `EXPO_PUBLIC_CONTACT_PHONE` and `EXPO_PUBLIC_CONTACT_URL`. Restart Metro after changing them. If a remote logo fails, the bundled official logo appears.
 
 The website's official favicon replaces the invented prototype icon. Its source is only **32×32 pixels**, even when a larger size is requested from Shopify; a high-resolution square brand asset is still needed for final app-store launcher artwork. Header and product assets are used at their original aspect ratios. Images remain the property of their respective owners.
+
+## Live product image handling
+
+Shopify image requests are bounded to 800×800 pixels and prefer JPEG for mobile compatibility. Each product keeps its featured image, its selected variant image and up to three gallery images as ordered, deduplicated candidates. If a download fails, the UI tries the next candidate; products with no working image retain the neutral placeholder. A refreshed product can retry its image downloads. This applies to Special Deals, New Arrivals, category grids, details and the cart.
+
+`npm run test:e2e:shopify` runs phone/desktop browser regressions against intercepted Shopify responses on port 8082. It uses a dummy public token and local image fixtures, not the live store. It covers missing featured images, failed downloads with a gallery backup, and products without photography; the regular sample browser suite remains on port 8081. Real-device and live-catalogue verification remain separate checks.

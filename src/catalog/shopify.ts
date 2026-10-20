@@ -2,15 +2,23 @@ import { ShopifyConfig } from './config';
 import { Catalog, CatalogService, categories, CategoryId, Product } from './types';
 
 type Money = { amount: string; currencyCode: string };
+type ProductPhoto = { url: string; altText: string | null };
 type Node = {
   id: string;
   handle: string;
   title: string;
   description: string;
   createdAt: string;
-  featuredImage: { url: string; altText: string | null } | null;
+  featuredImage: ProductPhoto | null;
+  images?: { nodes: ProductPhoto[] };
   variants: {
-    nodes: { id: string; availableForSale: boolean; price: Money; compareAtPrice: Money | null }[];
+    nodes: {
+      id: string;
+      availableForSale: boolean;
+      price: Money;
+      compareAtPrice: Money | null;
+      image?: ProductPhoto | null;
+    }[];
     pageInfo: { hasNextPage: boolean };
   };
 };
@@ -20,8 +28,12 @@ type Request = <T>(
   variables: Record<string, unknown>,
   signal?: AbortSignal,
 ) => Promise<T>;
-const fields = `id handle title description createdAt featuredImage { url altText }
-  variants(first: 100) { nodes { id availableForSale price { amount currencyCode } compareAtPrice { amount currencyCode } } pageInfo { hasNextPage } }`;
+// Keep mobile downloads bounded and request a broadly supported format from Shopify.
+const imageFields = `url(transform: { maxWidth: 800, maxHeight: 800, preferredContentType: JPG }) altText`;
+const fields = `id handle title description createdAt
+  featuredImage { ${imageFields} }
+  images(first: 3) { nodes { ${imageFields} } }
+  variants(first: 100) { nodes { id availableForSale image { ${imageFields} } price { amount currencyCode } compareAtPrice { amount currencyCode } } pageInfo { hasNextPage } }`;
 const productsQuery = `query Products($after: String) { products(first: 100, after: $after, sortKey: CREATED_AT, reverse: true) { nodes { ${fields} } pageInfo { hasNextPage endCursor } } }`;
 const collectionQuery = `query Collection($handle: String!, $after: String) { collection(handle: $handle) { products(first: 100, after: $after) { nodes { id } pageInfo { hasNextPage endCursor } } } }`;
 
@@ -55,6 +67,10 @@ export function normalizeProduct(node: Node, category: CategoryId | null): Produ
     throw new Error('Shopify returned an invalid price.');
   if (variant.compareAtPrice && variant.compareAtPrice.currencyCode !== 'AUD')
     throw new Error('Compare-at prices must also use AUD.');
+  const photos = [node.featuredImage, variant.image, ...(node.images?.nodes ?? [])].filter(
+    (photo): photo is ProductPhoto => !!photo?.url,
+  );
+  const imageUrls = [...new Set(photos.map((photo) => photo.url))];
   return {
     id: node.id,
     variantId: variant.id,
@@ -66,8 +82,9 @@ export function normalizeProduct(node: Node, category: CategoryId | null): Produ
     compareAtPrice: compare,
     currency: 'AUD',
     available: variant.availableForSale,
-    imageUrl: node.featuredImage?.url,
-    imageAlt: node.featuredImage?.altText ?? node.title,
+    imageUrl: imageUrls[0],
+    imageUrls,
+    imageAlt: photos[0]?.altText || node.title,
     createdAt: node.createdAt,
   };
 }

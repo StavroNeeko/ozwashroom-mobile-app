@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Image, Pressable, ScrollView, StyleSheet, View, useWindowDimensions } from 'react-native';
 import { router } from 'expo-router';
 import {
@@ -14,14 +14,19 @@ import { Copy, Icon } from './ui';
 import { bundledProductPhotos } from './productPhotos';
 
 export function ProductImage({ product, size = 150 }: { product: Product; size?: number }) {
-  const [failed, setFailed] = useState(false);
-  return product.imageUrl && !failed ? (
+  const [failedUrls, setFailedUrls] = useState<string[]>([]);
+  useEffect(() => setFailedUrls([]), [product]);
+  const imageUrl = [product.imageUrl, ...(product.imageUrls ?? [])].find(
+    (url): url is string => !!url && !failedUrls.includes(url),
+  );
+  return imageUrl ? (
     <Image
-      source={bundledProductPhotos[product.imageUrl] || { uri: product.imageUrl }}
+      key={imageUrl}
+      source={bundledProductPhotos[imageUrl] || { uri: imageUrl }}
       accessibilityLabel={product.imageAlt || product.title}
       style={{ width: size, height: size }}
       resizeMode="contain"
-      onError={() => setFailed(true)}
+      onError={() => setFailedUrls((previous) => [...new Set([...previous, imageUrl])])}
     />
   ) : (
     <View
