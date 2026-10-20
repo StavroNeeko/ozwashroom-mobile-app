@@ -1,4 +1,5 @@
 import { ShopifyConfig } from './config';
+import { createStorefrontRequest } from './storefront';
 import { Catalog, CatalogService, categories, CategoryId, Product } from './types';
 
 type Money = { amount: string; currencyCode: string };
@@ -23,11 +24,6 @@ type Node = {
   };
 };
 type Connection<T> = { nodes: T[]; pageInfo: { hasNextPage: boolean; endCursor: string | null } };
-type Request = <T>(
-  query: string,
-  variables: Record<string, unknown>,
-  signal?: AbortSignal,
-) => Promise<T>;
 // Keep mobile downloads bounded and request a broadly supported format from Shopify.
 const imageFields = `url(transform: { maxWidth: 800, maxHeight: 800, preferredContentType: JPG }) altText`;
 const fields = `id handle title description createdAt
@@ -93,47 +89,7 @@ export function createShopifyService(
   config: ShopifyConfig,
   fetcher: typeof fetch = fetch,
 ): CatalogService {
-  const request: Request = async <T>(
-    query: string,
-    variables: Record<string, unknown>,
-    signal?: AbortSignal,
-  ): Promise<T> => {
-    const controller = new AbortController();
-    const abort = () => controller.abort();
-    signal?.addEventListener('abort', abort, { once: true });
-    if (signal?.aborted) controller.abort();
-    const timer = setTimeout(abort, 20000);
-    try {
-      const response = await fetcher(
-        `https://${config.domain}/api/${config.apiVersion}/graphql.json`,
-        {
-          method: 'POST',
-          signal: controller.signal,
-          headers: {
-            'Content-Type': 'application/json',
-            'X-Shopify-Storefront-Access-Token': config.token,
-          },
-          body: JSON.stringify({
-            query: query.replace('{', '@inContext(country: AU) {'),
-            variables,
-          }),
-        },
-      );
-      if (!response.ok)
-        throw new Error(
-          `Shopify request failed (${response.status}). Check your public Storefront token and store domain.`,
-        );
-      const body = (await response.json()) as { data?: T; errors?: { message: string }[] };
-      if (body.errors?.length || !body.data)
-        throw new Error(
-          'Shopify could not load the catalogue. Check Storefront permissions and collection configuration.',
-        );
-      return body.data;
-    } finally {
-      clearTimeout(timer);
-      signal?.removeEventListener('abort', abort);
-    }
-  };
+  const request = createStorefrontRequest(config, fetcher);
   async function collect<T>(
     getPage: (after: string | null) => Promise<Connection<T>>,
   ): Promise<{ nodes: T[]; truncated: boolean }> {

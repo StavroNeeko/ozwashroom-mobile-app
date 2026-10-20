@@ -97,7 +97,7 @@ export default function ProductDetail() {
               <Copy style={s.note}>
                 {catalog?.source === 'sample'
                   ? 'This is a sample product. Prices and savings are illustrative; no purchase will be made.'
-                  : 'Your cart is saved on this device. Ordering and checkout are not enabled in this version.'}
+                  : 'Your cart is saved on this device. Continue to Shopify checkout from your cart to place an order.'}
               </Copy>
             </View>
           </View>

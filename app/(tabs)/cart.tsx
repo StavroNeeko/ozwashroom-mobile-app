@@ -2,6 +2,7 @@ import React from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 import { router } from 'expo-router';
 import { useStore } from '../../src/state/Store';
+import { useCheckout } from '../../src/state/useCheckout';
 import { money } from '../../src/catalog/types';
 import { ProductImage } from '../../src/components/Products';
 import {
@@ -17,7 +18,8 @@ import {
 import { colors as c, fonts as f } from '../../src/theme';
 
 export default function Cart() {
-  const { cart, count, updateQuantity, catalog, cartReady } = useStore();
+  const { cart, count, updateQuantity, catalog, cartReady, refresh } = useStore();
+  const { checkout, pending, error, clearError } = useCheckout();
   const total =
     cart.reduce((sum, line) => sum + Math.round(line.product.price * 100) * line.quantity, 0) / 100;
   return (
@@ -53,6 +55,7 @@ export default function Cart() {
                       <Pressable
                         accessibilityRole="button"
                         accessibilityLabel={`Decrease quantity of ${line.product.title}`}
+                        disabled={pending}
                         onPress={() => updateQuantity(line.product.variantId, -1)}
                         style={s.step}
                       >
@@ -70,7 +73,7 @@ export default function Cart() {
                       <Pressable
                         accessibilityRole="button"
                         accessibilityLabel={`Increase quantity of ${line.product.title}`}
-                        disabled={line.quantity >= 99}
+                        disabled={pending || line.quantity >= 99}
                         onPress={() => updateQuantity(line.product.variantId, 1)}
                         style={[s.step, line.quantity >= 99 && { opacity: 0.4 }]}
                       >
@@ -90,12 +93,42 @@ export default function Cart() {
                 <Copy style={{ fontFamily: f.bold, fontSize: 22 }}>{money(total)} AUD</Copy>
               </View>
               <Copy style={s.note}>
-                Shipping and tax totals are not calculated.{' '}
                 {catalog?.source === 'sample'
                   ? 'This sample cart cannot place orders or take payments.'
-                  : 'Checkout is not enabled in this version. No order will be placed.'}
+                  : 'Prices, shipping, taxes and payment options are confirmed at Shopify checkout. Your cart stays saved on this device when checkout opens.'}
               </Copy>
+              {catalog?.source === 'shopify' && (
+                <>
+                  <Action
+                    label={pending ? 'Preparing checkout…' : 'Checkout with Shopify'}
+                    icon="lock-closed-outline"
+                    disabled={pending || !cartReady}
+                    onPress={() => void checkout()}
+                  />
+                  <Copy style={s.note}>Opens secure Shopify checkout in your browser.</Copy>
+                </>
+              )}
+              {error && (
+                <View style={{ gap: 12 }}>
+                  <Copy
+                    accessibilityRole="alert"
+                    accessibilityLiveRegion="polite"
+                    style={{ color: c.red }}
+                  >
+                    {error}
+                  </Copy>
+                  <Action
+                    secondary
+                    label="Refresh products"
+                    onPress={() => {
+                      clearError();
+                      refresh();
+                    }}
+                  />
+                </View>
+              )}
               <Action
+                disabled={pending}
                 secondary
                 label="Continue browsing"
                 icon="arrow-forward"

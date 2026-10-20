@@ -15,7 +15,7 @@ export default function Account() {
       <EmptyState
         icon="person-outline"
         title="Good to see you here"
-        message="Account sign-in and order history will arrive in a future release. For now, you can browse products and save a cart on this device."
+        message="Account sign-in and order history will arrive in a future release. You can browse products, save a cart on this device and use Shopify checkout as a guest."
       />
       <View style={{ marginTop: 24, gap: 14, alignItems: 'center' }}>
         <Action
