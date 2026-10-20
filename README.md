@@ -133,3 +133,9 @@ Checkout is hidden in sample mode. The app validates live variant IDs and quanti
 Opening checkout preserves the local cart because returning to the app does not prove payment succeeded. Buyers can remove saved items with the cart controls after ordering. There is no in-app payment-success screen, automatic cart clearing, payment callback, customer sign-in or order history. Reopening checkout after returning creates a new Shopify cart; local/server cart synchronization and saved checkout-session recovery are not implemented.
 
 The existing public Storefront token must permit cart creation; Shopify payments, shipping and market settings must be configured on the store. Test on iPhone and Android with the actual Headless token. In a development/test store or coordinated Shopify test-payment session, verify quantities, AUD totals, shipping/tax, payment completion/cancellation and browser return before launch. Automated checks use intercepted API responses and never place live orders or make payments.
+
+## Android release builds
+
+See [Android release setup](docs/android-release.md) for account linking, cloud environment configuration, the standalone APK and Google Play AAB commands. `npm run android:release:check` reports missing setup without printing token values. Both local build commands and the EAS Android post-install hook require a linked Expo project and live Ozwashroom configuration. Production also requires a square PNG icon at least 1024×1024; the current website favicon deliberately fails that production check.
+
+A successful JavaScript export is not a signed Android build. No EAS project, signing key or Play Store submission is created by adding these configuration files.

@@ -14,7 +14,11 @@
     "test:e2e": "playwright test",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "test:e2e:shopify": "playwright test --config playwright.shopify.config.ts"
+    "test:e2e:shopify": "playwright test --config playwright.shopify.config.ts",
+    "android:release:check": "node --import tsx scripts/check-android-release.ts",
+    "android:preview": "npm run android:release:check -- --profile preview && npx eas-cli@latest build --platform android --profile preview",
+    "android:production": "npm run android:release:check -- --profile production && npx eas-cli@latest build --platform android --profile production",
+    "eas-build-post-install": "node --import tsx scripts/check-android-release.ts"
   },
   "dependencies": {
     "@expo-google-fonts/dm-sans": "^0.4.2",
