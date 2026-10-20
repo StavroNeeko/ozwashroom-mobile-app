@@ -22,12 +22,16 @@ Use the business's Expo account or organization. Follow the prompts to create/li
 
 ## 2. Configure cloud build variables
 
-After signing in and linking the project, copy the app's existing local `.env` settings to both EAS environments:
+After signing in and linking the project, create a temporary copy that omits blank assignments, then upload its settings to both EAS environments. EAS rejects empty variable values; the optional `EXPO_PUBLIC_BRAND_LOGO_URL=` line should be omitted because the app already bundles its logo. These commands leave the original `.env` unchanged:
 
 ```sh
-npx eas-cli@latest env:push --environment preview --path .env
-npx eas-cli@latest env:push --environment production --path .env
+sed '/^[A-Za-z_][A-Za-z0-9_]*=[[:space:]]*$/d' .env > .env.eas
+npx eas-cli@latest env:push --environment preview --path .env.eas
+npx eas-cli@latest env:push --environment production --path .env.eas
+rm .env.eas
 ```
+
+Run each command separately. Remove `.env.eas` after both uploads succeed. If an earlier upload created some variables before failing, review the replacement prompts for the same names; retain the intended current values.
 
 Review the selected project/environment and visibility prompts. These are public mobile-app settings: Expo bundles `EXPO_PUBLIC_*` values into the app. Use only the **public Storefront API token**, never an Admin API/private Storefront token. If the CLI does not show a needed value, use the Expo project dashboard's Environment variables page to set it for the corresponding environment.
 
