@@ -3,7 +3,7 @@ import base from './playwright.config';
 
 export default defineConfig({
   ...base,
-  testMatch: 'shopify-images.spec.ts',
+  testMatch: ['shopify-images.spec.ts', 'checkout.spec.ts'],
   use: { ...base.use, baseURL: 'http://127.0.0.1:8082' },
   webServer: {
     command: 'npx expo start --web --port 8082',

@@ -21,6 +21,9 @@ test('home promotions, category views, search and persistent cart work', async (
   await page.getByRole('button', { name: 'Add to cart', exact: true }).click();
   await page.getByRole('button', { name: 'View cart', exact: true }).click();
   await expect(page.getByText('Sample subtotal', { exact: true })).toBeVisible();
+  await expect(
+    page.getByRole('button', { name: 'Checkout with Shopify', exact: true }),
+  ).toHaveCount(0);
   await page
     .getByRole('button', {
       name: 'Increase quantity of Vortex Hand Dryer – Super Quiet Motor | 3-Year Warranty',

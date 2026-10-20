@@ -176,7 +176,7 @@ export default function Home() {
           <Copy style={s.footerNote}>
             {catalog?.source === 'sample'
               ? 'Demo catalogue. Official product photos; illustrative offers and prices.\nNo orders or payments are processed.'
-              : 'Browse the catalogue. Checkout is not available in this version.'}
+              : 'Complete your order securely with Shopify checkout.'}
           </Copy>
         </View>
       </View>
