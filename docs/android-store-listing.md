@@ -28,11 +28,19 @@ An internet connection is required to browse the live catalogue and check out. F
 
 **Privacy policy to review for app applicability:** https://www.ozwashroom.com.au/policies/privacy-policy
 
-## Assets still needed
+## Prepared artwork
 
-- Approved square launcher artwork at least 1024×1024 for the app build.
-- A Google Play store icon: 512×512, 32-bit PNG, maximum 1024 KB.
-- A feature graphic: 1024×500, JPEG or 24-bit PNG without alpha.
+| Asset               | File                                                                         | Format                                                             |
+| ------------------- | ---------------------------------------------------------------------------- | ------------------------------------------------------------------ |
+| Launcher icon       | [icon.png](../assets/icon.png)                                               | 1024×1024 PNG                                                      |
+| Adaptive foreground | [android-adaptive-foreground.png](../assets/android-adaptive-foreground.png) | 1024×1024 RGBA PNG; padded, white background configured separately |
+| Store icon          | [google-play-icon.png](../assets/store/google-play-icon.png)                 | 512×512, 32-bit PNG, under 1024 KB                                 |
+| Feature graphic     | [google-play-feature.png](../assets/store/google-play-feature.png)           | 1024×500, 24-bit PNG without alpha                                 |
+
+These assets were adapted from the logo supplied by the owner on 20 October 2026. Prepared image masters are retained in `assets/brand/`. The feature text reflects the existing shopping and checkout features. Review the artwork on an installed Android build before store submission.
+
+## Still needed for the listing
+
 - Screenshots from the installed release candidate, showing real app screens with Expo's developer tools hidden.
 - Owner-confirmed support email and completed Play Console declarations.
 

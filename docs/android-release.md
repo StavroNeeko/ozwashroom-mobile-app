@@ -2,23 +2,23 @@
 
 The app has been exercised through Expo Go on Android, including a real Shopify order reported successful by the owner. The next step is a **standalone signed APK**, then an **Android App Bundle (AAB)** for Google Play. These build profiles do not upload an app to Google Play or publish a store release.
 
-## Current setup gaps
+## Current release setup
 
-- Create an [Expo account](https://expo.dev/signup), then link this repository to an Expo project owned by the business.
-- Configure the same live Shopify variables used in the local `.env` in EAS's **preview** and **production** environments. Local `.env` files are excluded from build uploads.
-- Replace `assets/icon.png` with approved square brand artwork of at least **1024×1024** before a production build. The current official website favicon is **32×32**. It is permitted for an internal preview but blocked for production. Do not upscale the favicon and treat it as high-resolution artwork.
+- The owner created the Expo account, linked project `9ed21a6b-4187-4a63-995e-5562689020c0`, built a preview APK and confirmed that it runs independently on Android. `app.config.ts` provides that real project ID to fresh checkouts and preserves existing local project metadata.
+- The owner uploaded the working Shopify settings to EAS **preview**. Configure/verify them separately in **production** before its build. Local `.env` files are excluded from build uploads.
+- Prepared launcher artwork is now **1024×1024**, adapted from the owner-supplied water-splash logo. Android has a safe-area adaptive foreground; the store icon and feature graphic are in `assets/store/`. Review the artwork and test its masking on an installed APK before Play submission.
 - Before the first Google Play upload, confirm that **`com.ozwashroom.mobile`** is the business's intended application ID. It is preserved from the existing project; this preparation has not registered it or checked its availability in Play Console.
 
-## 1. Sign in and link the Expo project
+## 1. Sign in and confirm the linked Expo project
 
 In the project folder on the owner's Mac:
 
 ```sh
 npx eas-cli@latest login
-npx eas-cli@latest init
+npx eas-cli@latest project:info
 ```
 
-Use the business's Expo account or organization. Follow the prompts to create/link its project. EAS writes the real project ID to `extra.eas.projectId` in `app.json`; this repository does not contain an invented project ID. Keep that change for subsequent builds and commit the non-secret project metadata when ready. Never share the Expo password in chat.
+Use the business's Expo account or organization. Confirm that the project information identifies the existing Ozwashroom project, not a new project. This app is already linked through the owner-confirmed ID in `app.config.ts`; existing local `extra.eas.projectId` metadata in `app.json` is preserved. Do not initialize a different project for a normal subsequent build. Keep any local linkage changes. Never share the Expo password in chat.
 
 ## 2. Configure cloud build variables
 
@@ -52,7 +52,7 @@ Check product photos, all categories, search, quantity controls, persisted cart,
 
 ## 4. Build the Google Play AAB
 
-After adding the approved icon and confirming the application ID:
+After reviewing the prepared artwork, configuring the production environment and confirming the application ID:
 
 ```sh
 npm run android:release:check -- --profile production
@@ -78,6 +78,6 @@ The app stores cart variant IDs/quantities locally and sends those selections to
 | `preview`    | APK      | `preview`       | Direct Android installation for testing |
 | `production` | AAB      | `production`    | Google Play upload                      |
 
-Both use Node 24.19.0, matching the validation runtime. No development-client dependency is needed for these standalone release-mode builds. iPhone support remains unverified and is outside this Android release preparation.
+Both use Node 24.19.0, matching the validation runtime. The release check reads resolved Expo configuration, including `app.config.ts` and local static metadata. No development-client dependency is needed for these standalone release-mode builds. iPhone support remains unverified and is outside this Android release preparation.
 
 Sources: [Expo build setup](https://docs.expo.dev/build/setup/), [APK builds](https://docs.expo.dev/build-reference/apk/), [EAS configuration](https://docs.expo.dev/eas/json/), [environment management](https://docs.expo.dev/eas/environment-variables/manage/), [Android version management](https://docs.expo.dev/build-reference/app-versions/), [Google Play submission](https://docs.expo.dev/submit/android/).

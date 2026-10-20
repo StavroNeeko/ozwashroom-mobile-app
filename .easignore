@@ -165,3 +165,7 @@ google-service-account*.json
 
 # Previously mis-saved local environment document
 *.env.pages
+
+# Prepared masters and store marketing files are not runtime app assets.
+assets/brand/
+assets/store/

@@ -116,7 +116,7 @@ The banner remains approximately half its original height: 165 points on phones 
 
 The official website phone **1300 652 715**, confirmed by the owner, appears under the header and opens `tel:1300652715`. Optional public overrides are documented in `.env.example`: `EXPO_PUBLIC_BRAND_LOGO_URL` (PNG/JPEG), `EXPO_PUBLIC_CONTACT_PHONE` and `EXPO_PUBLIC_CONTACT_URL`. Restart Metro after changing them. If a remote logo fails, the bundled official logo appears.
 
-The website's official favicon replaces the invented prototype icon. Its source is only **32×32 pixels**, even when a larger size is requested from Shopify; a high-resolution square brand asset is still needed for final app-store launcher artwork. Header and product assets are used at their original aspect ratios. Images remain the property of their respective owners.
+The launcher and favicon now use artwork adapted from the owner's supplied water-splash logo. `assets/icon.png` is 1024×1024; Android uses a separately padded adaptive foreground on white. Google Play's 512×512 icon and 1024×500 feature graphic are in `assets/store/`. Prepared masters and provenance are recorded in `assets/brand/` and `assets/sources.json`. The website header logo and product photos retain their original sources. Images remain the property of their respective owners.
 
 ## Live product image handling
 
@@ -136,6 +136,6 @@ The existing public Storefront token must permit cart creation; Shopify payments
 
 ## Android release builds
 
-See [Android release setup](docs/android-release.md) for account linking, cloud environment configuration, the standalone APK and Google Play AAB commands. `npm run android:release:check` reports missing setup without printing token values. Both local build commands and the EAS Android post-install hook require a linked Expo project and live Ozwashroom configuration. Production also requires a square PNG icon at least 1024×1024; the current website favicon deliberately fails that production check.
+See [Android release setup](docs/android-release.md) for account linking, cloud environment configuration, the standalone APK and Google Play AAB commands. `npm run android:release:check` reports missing setup without printing token values. Both local build commands and the EAS Android post-install hook require a linked Expo project and live Ozwashroom configuration. Production also requires a square PNG icon at least 1024×1024; the prepared water-splash icon meets that size check. The owner-confirmed Expo project ID is supplied through `app.config.ts`, preserving any project metadata already present in local `app.json`.
 
 A successful JavaScript export is not a signed Android build. No EAS project, signing key or Play Store submission is created by adding these configuration files.

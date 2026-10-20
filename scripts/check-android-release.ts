@@ -1,5 +1,6 @@
 import fs from 'node:fs';
 import path from 'node:path';
+import { getConfig } from 'expo/config';
 import { readShopifyConfig } from '../src/catalog/config';
 import { androidReleaseIssues } from './android-release-config';
 
@@ -18,7 +19,7 @@ const profile =
   profileIndex >= 0
     ? (args[profileIndex + 1] ?? '')
     : (process.env.EAS_BUILD_PROFILE ?? 'production');
-const app = JSON.parse(fs.readFileSync(path.join(root, 'app.json'), 'utf8')).expo;
+const app = getConfig(root).exp;
 const issues: string[] = [];
 let shopify: ReturnType<typeof readShopifyConfig> = null;
 try {
@@ -30,7 +31,9 @@ try {
 }
 let icon: { width: number; height: number } | undefined;
 try {
-  const data = fs.readFileSync(path.resolve(root, app.android?.icon ?? app.icon));
+  const iconPath = app.android?.icon ?? app.icon;
+  if (!iconPath) throw new Error('No icon configured.');
+  const data = fs.readFileSync(path.resolve(root, iconPath));
   if (
     data.length >= 24 &&
     data.subarray(0, 8).equals(Buffer.from([137, 80, 78, 71, 13, 10, 26, 10]))
